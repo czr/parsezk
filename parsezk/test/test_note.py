@@ -20,7 +20,7 @@ def test_filename():
     note = Note(id)
     assert re.match(
         '.+/test_note/202006210735 Test note.md',
-        note.filename(),
+        note.filename,
     )
 
 def test_text():
@@ -32,4 +32,4 @@ def test_text():
         This is a test.
         """
     )
-    assert note.text() == expected
+    assert note.text == expected

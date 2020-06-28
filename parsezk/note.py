@@ -6,9 +6,11 @@ class Note(object):
     def __init__(self, id):
         super(Note, self).__init__()
         self.id = id
-        
+
+    @property
     def filename(self):
         return Config.get('archive_dir') + '/' + self.id + '.md'
 
+    @property
     def text(self):
-        return Path(self.filename()).read_text(encoding='utf-8')
+        return Path(self.filename).read_text(encoding='utf-8')

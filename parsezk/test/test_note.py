@@ -1,13 +1,13 @@
 import inspect
-import os
 import re
+from os.path import abspath, dirname
+from textwrap import dedent
 from parsezk.environment import Config
 from parsezk.note import Note
 
-
 def setup():
     test_file = inspect.getfile(inspect.currentframe())
-    test_dir = os.path.dirname(os.path.abspath(test_file))
+    test_dir = dirname(abspath(test_file))
     Config.set('archive_dir', test_dir + '/test_note')
 
 def test_id():
@@ -24,4 +24,12 @@ def test_filename():
     )
 
 def test_text():
-    pass
+    id = '202006210735 Test note'
+    note = Note(id)
+    expected = dedent("""\
+        # Test note
+
+        This is a test.
+        """
+    )
+    assert note.text() == expected

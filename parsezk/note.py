@@ -1,3 +1,4 @@
+from pathlib import Path
 from parsezk.environment import Config
 
 class Note(object):
@@ -8,3 +9,6 @@ class Note(object):
         
     def filename(self):
         return Config.get('archive_dir') + '/' + self.id + '.md'
+
+    def text(self):
+        return Path(self.filename()).read_text(encoding='utf-8')

@@ -1,15 +1,17 @@
+import re
 from pathlib import Path
-from parsezk.environment import Config
 
 class Note(object):
     """Represents an individual note entry."""
-    def __init__(self, id):
+    def __init__(self, filename):
         super(Note, self).__init__()
-        self.id = id
+        self.filename = filename
 
     @property
-    def filename(self):
-        return Config.get('archive_dir') + '/' + self.id + '.md'
+    def id(self):
+        result = re.search('([^/]+)\\.md$', self.filename)
+        if result:
+            return result.group(1)
 
     @property
     def text(self):

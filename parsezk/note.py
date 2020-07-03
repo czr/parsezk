@@ -16,3 +16,10 @@ class Note(object):
     @property
     def text(self):
         return Path(self.filename).read_text(encoding='utf-8')
+
+    def links(self, key):
+        return re.findall(
+            r'\b' + key + r' : \s* \[\[ ( [^\]]+ ) \]\]',
+            self.text,
+            re.X,
+        )

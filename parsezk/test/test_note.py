@@ -70,3 +70,41 @@ def test_link_multiple():
     note = MockNote(filename, text)
 
     assert note.links('Next') == ['202007010705 Test note 2', '202007010705 Test note 3']
+
+def test_title():
+    text = dedent("""\
+        # Test note title
+
+        This is a test.
+        """
+    )
+    filename = archive_dir + '/202006210735 Test note.md'
+    note = MockNote(filename, text)
+
+    assert note.title == 'Test note title'
+
+def test_title_missing():
+    text = dedent("""\
+        This is a test.
+        """
+    )
+    filename = archive_dir + '/202006210735 Test note.md'
+    note = MockNote(filename, text)
+
+    assert note.title == None
+
+def test_title_multiple():
+    text = dedent("""\
+        # Test note title
+
+        This is a test.
+
+        # Test note title 2
+
+        This is still a test.
+        """
+    )
+    filename = archive_dir + '/202006210735 Test note.md'
+    note = MockNote(filename, text)
+
+    assert note.title == 'Test note title'

@@ -23,3 +23,15 @@ class Note(object):
             self.text,
             re.X,
         )
+
+    @property
+    def title(self):
+        m = re.match(
+            r'\A \# \s+ (.*)',
+            self.text,
+            re.X,
+        )
+        if m:
+            return m.group(1)
+        else:
+            return None

@@ -45,7 +45,7 @@ def test_link_complete():
         ),
     })
     lt = LinkTable(collection)
-    assert lt.table() == [
+    assert lt.table == [
         Link('202006210735 Test note', '202007052055 Test note 2', COMPLETE),
     ]
 
@@ -67,7 +67,7 @@ def test_link_forward_only():
         ),
     })
     lt = LinkTable(collection)
-    assert lt.table() == [
+    assert lt.table == [
         Link('202006210735 Test note', '202007052055 Test note 2', FORWARD_ONLY),
     ]
 
@@ -89,7 +89,7 @@ def test_link_backward_only():
         ),
     })
     lt = LinkTable(collection)
-    assert lt.table() == [
+    assert lt.table == [
         Link('202006210735 Test note', '202007052055 Test note 2', BACKWARD_ONLY),
     ]
 

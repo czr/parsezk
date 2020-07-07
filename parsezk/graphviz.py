@@ -37,6 +37,7 @@ class LinkTable():
         super().__init__()
         self.collection = collection
 
+    @property
     def table(self):
         table = []
 

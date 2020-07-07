@@ -3,7 +3,7 @@ from os.path import abspath, dirname
 from textwrap import dedent
 from parsezk.test import MockNote
 from parsezk.graphviz import (
-    Graphviz,
+    LinkTable,
     Link,
     COMPLETE,
     FORWARD_ONLY,
@@ -44,8 +44,8 @@ def test_link_complete():
             """
         ),
     })
-    g = Graphviz(collection)
-    assert g.link_table() == [
+    lt = LinkTable(collection)
+    assert lt.table() == [
         Link('202006210735 Test note', '202007052055 Test note 2', COMPLETE),
     ]
 
@@ -66,8 +66,8 @@ def test_link_forward_only():
             """
         ),
     })
-    g = Graphviz(collection)
-    assert g.link_table() == [
+    lt = LinkTable(collection)
+    assert lt.table() == [
         Link('202006210735 Test note', '202007052055 Test note 2', FORWARD_ONLY),
     ]
 
@@ -88,8 +88,8 @@ def test_link_backward_only():
             """
         ),
     })
-    g = Graphviz(collection)
-    assert g.link_table() == [
+    lt = LinkTable(collection)
+    assert lt.table() == [
         Link('202006210735 Test note', '202007052055 Test note 2', BACKWARD_ONLY),
     ]
 

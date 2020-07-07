@@ -31,13 +31,13 @@ class Link(Printable):
             and self.status == other.status
         )
 
-class Graphviz():
-    """Builds a Graphviz document"""
+class LinkTable():
+    """Represents the links in a NoteCollection"""
     def __init__(self, collection):
         super().__init__()
         self.collection = collection
 
-    def link_table(self):
+    def table(self):
         table = []
 
         # Complete and forward links
@@ -60,3 +60,10 @@ class Graphviz():
                     table.append(Link(dest_id, source_id, BACKWARD_ONLY))
 
         return table
+
+
+class Graphviz():
+    """Builds a Graphviz document"""
+    def __init__(self, collection):
+        super().__init__()
+        self.collection = collection

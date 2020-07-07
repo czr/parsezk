@@ -4,19 +4,12 @@ from os.path import abspath, dirname
 from textwrap import dedent
 from parsezk.environment import Config
 from parsezk.note import Note
+from parsezk.test import MockNote
+
 
 test_file = inspect.getfile(inspect.currentframe())
 test_dir = dirname(abspath(test_file))
 archive_dir = test_dir + '/test_note'
-
-class MockNote(Note):
-    def __init__(self, filename, text):
-        super().__init__(filename)
-        self._text = text
-
-    @property
-    def text(self):
-        return self._text
 
 def test_filename():
     filename = archive_dir + '/202006210735 Test note.md'

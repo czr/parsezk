@@ -68,3 +68,15 @@ class Graphviz():
     def __init__(self, collection):
         super().__init__()
         self.collection = collection
+        self.linktable = LinkTable(self.collection)
+
+    @property
+    def document(self):
+        lines = []
+        lines.append("digraph G {")
+        for link in self.linktable.table:
+            source_id = link.source
+            dest_id = link.destination
+            lines.append('"' + source_id + '" -> "' + dest_id + '"')
+        lines.append("}")
+        return "\n".join(lines)

@@ -1,0 +1,13 @@
+#!/usr/bin/env python
+
+from parsezk.notecollection import NoteCollection
+from parsezk.environment import Config
+from parsezk.graphviz import Graphviz
+import sys
+
+directory = sys.argv[1]
+
+Config.set('archive_dir', directory)
+
+graphviz = Graphviz(NoteCollection())
+print(graphviz.document)

@@ -88,6 +88,7 @@ class Graphviz():
     def document(self):
         lines = []
         lines.append("digraph G {")
+        lines.append("rankdir=LR")
 
         for note_id, note in self.collection.items():
             lines.append('"' + note_id + '"')

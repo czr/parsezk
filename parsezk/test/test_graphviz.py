@@ -136,12 +136,22 @@ def test_document_nodes():
         }
     """))
 
-def test_document_nodes_with_quote_in_title():
+def test_document_quoting():
     collection = build_notecollection({
-        '202006210735 Test note': dedent("""\
+        '202006210735 Test "note"': dedent("""\
             # Test "note"
 
             This is a test.
+
+            Next: [[202007052055 Test note 2]]
+            """
+        ),
+        '202007052055 Test note 2': dedent("""\
+            # Test note 2
+
+            This is a test.
+
+            Prev: [[202006210735 Test "note"]]
             """
         ),
     })
@@ -149,7 +159,9 @@ def test_document_nodes_with_quote_in_title():
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
             rankdir=LR
-            "202006210735 Test note" [label="Test \\"note\\""]
+            "202006210735 Test \\"note\\"" [label="Test \\"note\\""]
+            "202007052055 Test note 2" [label="Test note 2"]
+            "202006210735 Test \\"note\\"" -> "202007052055 Test note 2"
         }
     """))
 
@@ -272,7 +284,7 @@ def test_document_complete_links():
             rankdir=LR
             "202006210735 Test note" [label="Test note"]
             "202007052055 Test note 2" [label="Test note 2"]
-            "202006210735 Test note" -> "202007052055 Test note 2" [color="grey"]
+            "202006210735 Test note" -> "202007052055 Test note 2" [style=dashed color="grey"]
         }
     """))
 

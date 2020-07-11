@@ -102,11 +102,11 @@ class Graphviz():
             source_id = link.source
             dest_id = link.destination
             if (link.status == FORWARD_ONLY or link.status == BACKWARD_ONLY):
-                lines.append('"' + source_id + '" -> "' + dest_id + '" [color="red"]')
+                lines.append('"' + graphviz_escape_quotes(source_id) + '" -> "' + graphviz_escape_quotes(dest_id) + '" [color="red"]')
             elif (link.status == MENTION):
-                lines.append('"' + source_id + '" -> "' + dest_id + '" [color="grey"]')
+                lines.append('"' + graphviz_escape_quotes(source_id) + '" -> "' + graphviz_escape_quotes(dest_id) + '" [style=dashed color="grey"]')
             else:
-                lines.append('"' + source_id + '" -> "' + dest_id + '"')
+                lines.append('"' + graphviz_escape_quotes(source_id) + '" -> "' + graphviz_escape_quotes(dest_id) + '"')
 
         lines.append("}")
         return "\n".join(lines)

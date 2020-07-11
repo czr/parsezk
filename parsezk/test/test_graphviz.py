@@ -129,6 +129,54 @@ def test_document_complete_links():
         }
     """))
 
+def test_document_forward_only_links():
+    collection = build_notecollection({
+        '202006210735 Test note': dedent("""\
+            # Test note
+
+            This is a test.
+
+            Next: [[202007052055 Test note 2]]
+            """
+        ),
+        '202007052055 Test note 2': dedent("""\
+            # Test note 2
+
+            This is a test.
+            """
+        ),
+    })
+    g = Graphviz(collection)
+    assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
+        digraph G {
+            "202006210735 Test note" -> "202007052055 Test note 2" [color="red"]
+        }
+    """))
+
+def test_document_backward_only_links():
+    collection = build_notecollection({
+        '202006210735 Test note': dedent("""\
+            # Test note
+
+            This is a test.
+            """
+        ),
+        '202007052055 Test note 2': dedent("""\
+            # Test note 2
+
+            This is a test.
+
+            Prev: [[202006210735 Test note]]
+            """
+        ),
+    })
+    g = Graphviz(collection)
+    assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
+        digraph G {
+            "202006210735 Test note" -> "202007052055 Test note 2" [color="red"]
+        }
+    """))
+
 def normalize_whitespace(string):
     return re.sub(r'(\n|\s)+', r' ', string).strip()
 

@@ -77,6 +77,9 @@ class Graphviz():
         for link in self.linktable.table:
             source_id = link.source
             dest_id = link.destination
-            lines.append('"' + source_id + '" -> "' + dest_id + '"')
+            if (link.status == FORWARD_ONLY or link.status == BACKWARD_ONLY):
+                lines.append('"' + source_id + '" -> "' + dest_id + '" [color="red"]')
+            else:
+                lines.append('"' + source_id + '" -> "' + dest_id + '"')
         lines.append("}")
         return "\n".join(lines)

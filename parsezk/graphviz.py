@@ -1,9 +1,11 @@
 from pprint import pformat
+from collections import namedtuple
 
 
 COMPLETE = 'complete'
 FORWARD_ONLY = 'forward-only'
 BACKWARD_ONLY = 'backward-only'
+MENTION = 'mention'
 
 class Printable():
     """Mixin providing a generic __repr__ method"""
@@ -12,6 +14,8 @@ class Printable():
             '<' + type(self).__name__ + '> ' +
             pformat(vars(self), indent=2)
         )
+
+Route = namedtuple("Route", ["source_id", "destination_id"])
 
 class Link(Printable):
     """Represents a link between notes"""
@@ -39,11 +43,13 @@ class LinkTable():
 
     @property
     def table(self):
+        seen = {}
         table = []
 
         # Complete and forward links
         for source_id, source_note in self.collection.items():
             for dest_id in source_note.links('Next'):
+                seen[Route(source_id=source_id, destination_id=dest_id)] = True
                 dest_note = self.collection[dest_id]
                 if source_id in dest_note.links('Prev'):
                     table.append(Link(source_id, dest_id, COMPLETE))
@@ -53,12 +59,20 @@ class LinkTable():
         # Backward links
         for source_id, source_note in self.collection.items():
             for dest_id in source_note.links('Prev'):
+                seen[Route(source_id=source_id, destination_id=dest_id)] = True
                 dest_note = self.collection[dest_id]
                 if source_id in dest_note.links('Next'):
                     # Nothing to do. We picked up complete links above.
                     pass
                 else:
                     table.append(Link(dest_id, source_id, BACKWARD_ONLY))
+
+        # Mentions
+        for source_id, source_note in self.collection.items():
+            for dest_id in source_note.mentions:
+                route = Route(source_id=source_id, destination_id=dest_id)
+                if not seen.get(route, False):
+                    table.append(Link(source_id, dest_id, MENTION))
 
         return table
 
@@ -83,6 +97,8 @@ class Graphviz():
             dest_id = link.destination
             if (link.status == FORWARD_ONLY or link.status == BACKWARD_ONLY):
                 lines.append('"' + source_id + '" -> "' + dest_id + '" [color="red"]')
+            elif (link.status == MENTION):
+                lines.append('"' + source_id + '" -> "' + dest_id + '" [color="grey"]')
             else:
                 lines.append('"' + source_id + '" -> "' + dest_id + '"')
 

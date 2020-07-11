@@ -2,6 +2,9 @@ import re
 from pathlib import Path
 from unicodedata import normalize
 
+def normalize_id(id):
+    return normalize('NFC', id)
+
 class Note(object):
     """Represents an individual note entry."""
     def __init__(self, filename):
@@ -12,7 +15,7 @@ class Note(object):
     def id(self):
         result = re.search('([^/]+)\\.md$', self.filename)
         if result:
-            return normalize('NFC', result.group(1))
+            return normalize_id(result.group(1))
 
     @property
     def text(self):
@@ -24,7 +27,7 @@ class Note(object):
             self.text,
             re.X,
         )
-        return [normalize('NFC', l) for l in links]
+        return [normalize_id(l) for l in links]
 
     @property
     def title(self):
@@ -37,3 +40,12 @@ class Note(object):
             return m.group(1)
         else:
             return None
+
+    @property
+    def mentions(self):
+        mentions = re.findall(
+            r'\[\[ ( [^\]]+ ) \]\]',
+            self.text,
+            re.X,
+        )
+        return [normalize_id(m) for m in mentions]

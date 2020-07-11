@@ -9,7 +9,8 @@ from parsezk.graphviz import (
     Link,
     COMPLETE,
     FORWARD_ONLY,
-    BACKWARD_ONLY
+    BACKWARD_ONLY,
+    MENTION,
 )
 
 
@@ -93,6 +94,20 @@ def test_link_backward_only():
     lt = LinkTable(collection)
     assert lt.table == [
         Link('202006210735 Test note', '202007052055 Test note 2', BACKWARD_ONLY),
+    ]
+
+def test_mention():
+    collection = build_notecollection({
+        '202006210735 Test note': dedent("""\
+            # Test note
+
+            This is a test. See [[202007052055 Test note 2]].
+            """
+        ),
+    })
+    lt = LinkTable(collection)
+    assert lt.table == [
+        Link('202006210735 Test note', '202007052055 Test note 2', MENTION),
     ]
 
 def test_document_empty():
@@ -199,6 +214,32 @@ def test_document_backward_only_links():
         }
     """))
 
-def normalize_whitespace(string):
-    return re.sub(r'(\n|\s)+', r' ', string).strip()
+def test_document_complete_links():
+    collection = build_notecollection({
+        '202006210735 Test note': dedent("""\
+            # Test note
 
+            This is a test. See [[202007052055 Test note 2]].
+            """
+        ),
+        '202007052055 Test note 2': dedent("""\
+            # Test note 2
+
+            This is a test.
+            """
+        ),
+    })
+    g = Graphviz(collection)
+    assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
+        digraph G {
+            "202006210735 Test note"
+            "202007052055 Test note 2"
+            "202006210735 Test note" -> "202007052055 Test note 2" [color="grey"]
+        }
+    """))
+
+def normalize_whitespace(string):
+    lines = string.splitlines()
+    normalized_lines = [re.sub(r'\s+', r' ', l).strip() for l in lines]
+    filtered_lines = [l for l in normalized_lines if len(l) > 0]
+    return "\n".join(filtered_lines)

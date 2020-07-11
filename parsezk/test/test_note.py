@@ -64,6 +64,18 @@ def test_link_multiple():
 
     assert note.links('Next') == ['202007010705 Test note 2', '202007010705 Test note 3']
 
+def test_mentions():
+    text = dedent("""\
+        # Test note
+
+        This is a test. See [[202007010705 Test note 2]].
+        """
+    )
+    filename = archive_dir + '/202006210735 Test note.md'
+    note = MockNote(filename, text)
+
+    assert note.mentions == ['202007010705 Test note 2']
+
 def test_title():
     text = dedent("""\
         # Test note title

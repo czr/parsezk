@@ -76,6 +76,8 @@ class LinkTable():
 
         return table
 
+def graphviz_escape_quotes(string):
+    return string.replace('"', '\\"')
 
 class Graphviz():
     """Builds a Graphviz document"""
@@ -91,7 +93,10 @@ class Graphviz():
         lines.append("rankdir=LR")
 
         for note_id, note in self.collection.items():
-            lines.append('"' + note_id + '"')
+            lines.append(
+                '"' + graphviz_escape_quotes(note_id) + '"'
+                + ' [label="' + graphviz_escape_quotes(note.title or note_id) +'"]'
+            )
 
         for link in self.linktable.table:
             source_id = link.source

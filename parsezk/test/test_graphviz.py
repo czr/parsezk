@@ -132,7 +132,39 @@ def test_document_nodes():
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
             rankdir=LR
-            "202006210735 Test note"
+            "202006210735 Test note" [label="Test note"]
+        }
+    """))
+
+def test_document_nodes_with_quote_in_title():
+    collection = build_notecollection({
+        '202006210735 Test note': dedent("""\
+            # Test "note"
+
+            This is a test.
+            """
+        ),
+    })
+    g = Graphviz(collection)
+    assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
+        digraph G {
+            rankdir=LR
+            "202006210735 Test note" [label="Test \\"note\\""]
+        }
+    """))
+
+def test_document_nodes_without_title():
+    collection = build_notecollection({
+        '202006210735 Test note': dedent("""\
+            This is a test.
+            """
+        ),
+    })
+    g = Graphviz(collection)
+    assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
+        digraph G {
+            rankdir=LR
+            "202006210735 Test note" [label="202006210735 Test note"]
         }
     """))
 
@@ -159,8 +191,8 @@ def test_document_complete_links():
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
             rankdir=LR
-            "202006210735 Test note"
-            "202007052055 Test note 2"
+            "202006210735 Test note" [label="Test note"]
+            "202007052055 Test note 2" [label="Test note 2"]
             "202006210735 Test note" -> "202007052055 Test note 2"
         }
     """))
@@ -186,8 +218,8 @@ def test_document_forward_only_links():
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
             rankdir=LR
-            "202006210735 Test note"
-            "202007052055 Test note 2"
+            "202006210735 Test note" [label="Test note"]
+            "202007052055 Test note 2" [label="Test note 2"]
             "202006210735 Test note" -> "202007052055 Test note 2" [color="red"]
         }
     """))
@@ -213,8 +245,8 @@ def test_document_backward_only_links():
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
             rankdir=LR
-            "202006210735 Test note"
-            "202007052055 Test note 2"
+            "202006210735 Test note" [label="Test note"]
+            "202007052055 Test note 2" [label="Test note 2"]
             "202006210735 Test note" -> "202007052055 Test note 2" [color="red"]
         }
     """))
@@ -238,8 +270,8 @@ def test_document_complete_links():
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
             rankdir=LR
-            "202006210735 Test note"
-            "202007052055 Test note 2"
+            "202006210735 Test note" [label="Test note"]
+            "202007052055 Test note 2" [label="Test note 2"]
             "202006210735 Test note" -> "202007052055 Test note 2" [color="grey"]
         }
     """))

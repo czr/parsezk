@@ -103,6 +103,22 @@ def test_document_empty():
         }\
     """))
 
+def test_document_nodes():
+    collection = build_notecollection({
+        '202006210735 Test note': dedent("""\
+            # Test note
+
+            This is a test.
+            """
+        ),
+    })
+    g = Graphviz(collection)
+    assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
+        digraph G {
+            "202006210735 Test note"
+        }
+    """))
+
 def test_document_complete_links():
     collection = build_notecollection({
         '202006210735 Test note': dedent("""\
@@ -125,6 +141,8 @@ def test_document_complete_links():
     g = Graphviz(collection)
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
+            "202006210735 Test note"
+            "202007052055 Test note 2"
             "202006210735 Test note" -> "202007052055 Test note 2"
         }
     """))
@@ -149,6 +167,8 @@ def test_document_forward_only_links():
     g = Graphviz(collection)
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
+            "202006210735 Test note"
+            "202007052055 Test note 2"
             "202006210735 Test note" -> "202007052055 Test note 2" [color="red"]
         }
     """))
@@ -173,6 +193,8 @@ def test_document_backward_only_links():
     g = Graphviz(collection)
     assert normalize_whitespace(g.document) == normalize_whitespace(dedent("""
         digraph G {
+            "202006210735 Test note"
+            "202007052055 Test note 2"
             "202006210735 Test note" -> "202007052055 Test note 2" [color="red"]
         }
     """))

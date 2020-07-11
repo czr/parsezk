@@ -74,6 +74,10 @@ class Graphviz():
     def document(self):
         lines = []
         lines.append("digraph G {")
+
+        for note_id, note in self.collection.items():
+            lines.append('"' + note_id + '"')
+
         for link in self.linktable.table:
             source_id = link.source
             dest_id = link.destination
@@ -81,5 +85,6 @@ class Graphviz():
                 lines.append('"' + source_id + '" -> "' + dest_id + '" [color="red"]')
             else:
                 lines.append('"' + source_id + '" -> "' + dest_id + '"')
+
         lines.append("}")
         return "\n".join(lines)
